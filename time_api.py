@@ -1,13 +1,6 @@
 # file: time_api.py
-# author: leddiAPI
+# author: leddi
 # date: 19.09.2020
-# 
-# description:
-# this API delivers date in JSON as follows:
-# {"unix": 1479663089000 ,"utc": "Sun, 20 Nov 2016 17:31:29 GMT"}
-# on error {"error": "Invalid Date"}
-# expected date format:
-# seconds since 1970 or date-string YYYY-MM-DD
 
 
 from flask import Flask, jsonify, request
@@ -46,6 +39,17 @@ def dateToTimestamp(datum:str):
             return jsonify(error="Invalid Date"), 400
     seconds = int(time.mktime(datum))
     return jsonify(unix=seconds, utc=seconds2utc(seconds))
+
+
+#{"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5",
+#"software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
+@app.route('/api/whoami')
+def whoami():
+    ip = request.remote_addr
+    useragent = str(request.user_agent)
+    language = str(request.accept_languages)
+    print(language)
+    return jsonify(ipaddress=ip, language=language, software=useragent)
 
 
 if __name__ == "__main__":
