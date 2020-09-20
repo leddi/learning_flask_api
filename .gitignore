@@ -1,6 +1,7 @@
 *
 !time_api.py
 !url_shortener.html
+!README.md
 !.gitignore
 !./templates/*
 !./templates/url_shortener.html
