@@ -3,11 +3,17 @@
 # date: 19.09.2020
 
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect, url_for, render_template
 import time
 
 
 app = Flask(__name__)
+
+#flaskform
+# class NameForm(FlaskForm):
+#     name = StringField('What is your name?', validators=[DataRequired()])
+#     age  = IntegerField('How old are U?', validators=[DataRequired(), NumberRange(3, 100)])
+#     submit = SubmitField('Submit')
 
 
 def seconds2utc(seconds:int):
@@ -50,6 +56,26 @@ def whoami():
     language = str(request.accept_languages)
     print(language)
     return jsonify(ipaddress=ip, language=language, software=useragent)
+
+
+#I can POST a URL to [project_url]/api/shorturl/new and I will receive a shortened URL in the JSON response.
+#Example : {"original_url":"www.heise.de","short_url":1}
+#then /api/shorturl/1 will redirect to heise.de
+# dnslookup for original_url
+
+@app.route('/api/shorturl/new', methods=['GET', 'POST'])
+def new_short_url():
+    if request.method == 'POST':
+        original_url=request.form['url']     #form.original_url.data
+        short_url=''
+        return jsonify(original_url=original_url, short_url=short_url)
+    else:
+        return render_template('url_shortener.html')
+
+
+@app.route('/api/shorturl/<int:short_url>', methods=['GET', 'POST'])
+def short_url(short_url:int):
+    return redirect("http://www.heise.de")
 
 
 if __name__ == "__main__":
