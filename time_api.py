@@ -107,11 +107,11 @@ def whoami():
 def new_short_url():
     if request.method == 'POST':
         original_url=request.form['url']     #form.original_url.data
-        short_url=''
         newUrl = Short_url(url=original_url)
         db.session.add(newUrl)
         db.session.commit()
-        return jsonify(original_url=original_url, short_url=short_url)
+        short_url=Short_url.query.filter_by(url=original_url).first()
+        return jsonify(original_url=original_url, short_url=short_url.id)
     else:
         return render_template('url_shortener.html')
 
