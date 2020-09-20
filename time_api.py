@@ -32,7 +32,7 @@ def db_create():
 
 @app.cli.command('db_seed')
 def db_seed():
-    heise = Short_url(url="https://www.heise")
+    heise = Short_url(url="https://www.heise.de")
     golem = Short_url(url="https://www.golem.de")
     faz = Short_url(url="https://www.faz.net")
 
