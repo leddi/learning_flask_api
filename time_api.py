@@ -118,7 +118,8 @@ def new_short_url():
 
 @app.route('/api/shorturl/<int:short_url>', methods=['GET', 'POST'])
 def short_url(short_url:int):
-    return redirect("http://www.heise.de")
+    short_url = Short_url.query.filter_by(id=short_url).first()
+    return redirect(short_url.url)
 
 
 if __name__ == "__main__":
