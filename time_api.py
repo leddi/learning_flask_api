@@ -4,16 +4,58 @@
 
 
 from flask import Flask, jsonify, request, redirect, url_for, render_template
-import time
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, String, Integer, Float
+import os, time
 
 
 app = Flask(__name__)
 
-#flaskform
-# class NameForm(FlaskForm):
-#     name = StringField('What is your name?', validators=[DataRequired()])
-#     age  = IntegerField('How old are U?', validators=[DataRequired(), NumberRange(3, 100)])
-#     submit = SubmitField('Submit')
+
+#SQLAlchemy config
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or "foobar"
+app.config['SQLALCHEMY_DATABASE_URI'] =\
+            'sqlite:///' + os.path.join(basedir, 'shortener.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+
+#database db.model url_shortener
+db = SQLAlchemy(app)
+
+@app.cli.command('db_create')
+def db_create():
+    db.create_all()
+    print("Database created")
+
+
+@app.cli.command('db_seed')
+def db_seed():
+    heise = Short_url(url="heise")
+    golem = Short_url(url="golem.de")
+    faz = Short_url(url="www.faz.net")
+
+    db.session.add(heise)
+    db.session.add(golem)
+    db.session.add(faz)
+
+    db.session.commit()
+    print("Database seeded...")
+
+
+@app.cli.command('db_drop')
+def db_drop():
+    db.drop_all()
+    print("Database dropped...")
+
+
+class Short_url(db.Model):
+    __tablename__ = 'short_urls'
+    id = Column(Integer, primary_key=True)
+    url = Column(String)   #, unique=True
+
+    # def __repr__(self):
+    #     return '<Short_url %r>' % self.short_url
 
 
 def seconds2utc(seconds:int):
