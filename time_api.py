@@ -23,6 +23,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #database db.model url_shortener
 db = SQLAlchemy(app)
 
+
 @app.cli.command('db_create')
 def db_create():
     db.create_all()
@@ -31,9 +32,9 @@ def db_create():
 
 @app.cli.command('db_seed')
 def db_seed():
-    heise = Short_url(url="heise")
-    golem = Short_url(url="golem.de")
-    faz = Short_url(url="www.faz.net")
+    heise = Short_url(url="https://www.heise")
+    golem = Short_url(url="https://www.golem.de")
+    faz = Short_url(url="https://www.faz.net")
 
     db.session.add(heise)
     db.session.add(golem)
@@ -53,9 +54,6 @@ class Short_url(db.Model):
     __tablename__ = 'short_urls'
     id = Column(Integer, primary_key=True)
     url = Column(String)   #, unique=True
-
-    # def __repr__(self):
-    #     return '<Short_url %r>' % self.short_url
 
 
 def seconds2utc(seconds:int):
@@ -110,6 +108,9 @@ def new_short_url():
     if request.method == 'POST':
         original_url=request.form['url']     #form.original_url.data
         short_url=''
+        newUrl = Short_url(url=original_url)
+        db.session.add(newUrl)
+        db.session.commit()
         return jsonify(original_url=original_url, short_url=short_url)
     else:
         return render_template('url_shortener.html')
