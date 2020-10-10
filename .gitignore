@@ -6,3 +6,4 @@
 !.gitignore
 !./templates/*
 !./templates/url_shortener.html
+!./templates/listurls.html
