@@ -116,6 +116,12 @@ def new_short_url():
         return render_template('url_shortener.html')
 
 
+@app.route('/api/shorturl/listurls', methods=['GET'])
+def list_short_urls():
+    urls = Short_url.query.order_by(Short_url.id).all()
+    return render_template('listurls.html', urls=urls)
+
+
 @app.route('/api/shorturl/<int:short_url>', methods=['GET', 'POST'])
 def short_url(short_url:int):
     short_url = Short_url.query.filter_by(id=short_url).first()
