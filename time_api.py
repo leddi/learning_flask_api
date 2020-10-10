@@ -54,7 +54,9 @@ class Short_url(db.Model):
     __tablename__ = 'short_urls'
     id = Column(Integer, primary_key=True)
     url = Column(String)   #, unique=True
-
+    
+    def __repr__(self):
+        return (self.url)
 
 def seconds2utc(seconds:int):
     return time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.gmtime(seconds))
@@ -118,7 +120,7 @@ def new_short_url():
 
 @app.route('/api/shorturl/listurls', methods=['GET'])
 def list_short_urls():
-    urls = Short_url.query.order_by(Short_url.id).all()
+    urls = Short_url.query.order_by(Short_url.url).all()
     return render_template('listurls.html', urls=urls)
 
 
